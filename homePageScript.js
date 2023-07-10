@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let toDoInput = document.getElementById('to-do-input');
     let toDoList = document.getElementById('to-do-list');
     let doneList = document.getElementById('done-list');
-    let deleteModeButton = document.getElementById('delete-mode');
-    let cancelModeButton = document.getElementById('cancel-mode');
+    let trashModeButton = document.getElementById('trash-mode');
+    let clearCompletedButton = document.getElementById('clear-completed');
 
     let isDeleteMode = false;
 
@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (this.checked) {
                     // Move the task to the 'Done' section
                     let parentItem = this.parentElement;
-                    parentItem.removeChild(this);
+                    parentItem.removeChild(taskCheckbox);
                     parentItem.classList.add('completed');
                     doneList.appendChild(parentItem);
                     addApprovalMark(parentItem);
                 } else {
                     // Move the task back to the 'To Do' section
                     let parentItem = this.parentElement;
-                    parentItem.removeChild(this);
+                    parentItem.removeChild(taskCheckbox);
                     parentItem.classList.remove('completed');
                     toDoList.appendChild(parentItem);
                     removeApprovalMark(parentItem);
@@ -59,55 +59,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function enableDeleteMode() {
-        isDeleteMode = true;
-        deleteModeButton.disabled = true;
-        cancelModeButton.disabled = false;
-        toDoList.classList.add('delete-mode');
+    function toggleDeleteMode() {
+        isDeleteMode = !isDeleteMode;
+        toDoList.classList.toggle('delete-mode');
+        trashModeButton.classList.toggle('active');
     }
 
-    function disableDeleteMode() {
-        isDeleteMode = false;
-        deleteModeButton.disabled = false;
-        cancelModeButton.disabled = true;
-        toDoList.classList.remove('delete-mode');
-    }
+    function deleteTask(event) {
+        let target = event.target;
+        let taskItem = target.closest('li');
 
-    function deleteTask(taskItem) {
-        let parentList = taskItem.parentElement;
+        if (taskItem) {
+            let parentList = taskItem.parentElement;
 
-        // Display confirmation dialog
-        let confirmDelete = confirm("Are you sure you want to delete this task?");
-        if (confirmDelete) {
-            parentList.removeChild(taskItem);
-
-            // Remove the task from local storage if needed
-            if (parentList === toDoList) {
-                removeTaskFromLocalStorage(taskItem);
+            // Display confirmation dialog
+            let confirmDelete = confirm('Are you sure you want to delete this task?');
+            if (confirmDelete) {
+                parentList.removeChild(taskItem);
             }
         }
     }
 
-    function removeTaskFromLocalStorage(taskItem) {
-        let taskText = taskItem.querySelector('label').textContent;
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let updatedTasks = tasks.filter((task) => task !== taskText);
-        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    function clearCompletedTasks() {
+        let completedTasks = document.querySelectorAll('.completed');
+
+        completedTasks.forEach(task => {
+            doneList.removeChild(task);
+        });
     }
 
     function handleTaskClick(event) {
         let target = event.target;
         if (isDeleteMode) {
-            let taskItem = target.closest('li');
-            if (taskItem) {
-                deleteTask(taskItem);
-            }
+            deleteTask(event);
         }
     }
 
     addTaskButton.addEventListener('click', addTask);
-    deleteModeButton.addEventListener('click', enableDeleteMode);
-    cancelModeButton.addEventListener('click', disableDeleteMode);
+    trashModeButton.addEventListener('click', toggleDeleteMode);
     toDoList.addEventListener('click', handleTaskClick);
     doneList.addEventListener('click', handleTaskClick);
+    clearCompletedButton.addEventListener('click', clearCompletedTasks);
 });
