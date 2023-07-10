@@ -1,42 +1,40 @@
-body{
+body {
     height: 100vh;
     width: 100vw;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-
-
-.grid-container {
+  }
+  
+  .grid-container {
     display: grid;
     grid-template-rows: 45vh 45vh 10vh;
     grid-template-columns: 10vw 80vw 10vw;
-}
-
-#to-do {
+  }
+  
+  #to-do {
     grid-row-start: 1;
     grid-row-end: 2;
     grid-column-start: 2;
     grid-column-end: 3;
     text-align: center;
-}
-
-#done {
+  }
+  
+  #done {
     grid-row-start: 2;
     grid-row-end: 3;
     grid-column-start: 2;
     grid-column-end: 3;
     text-align: center;
-}
-
-#to-do-input {
+  }
+  
+  #to-do-input {
     display: flex;
     grid-row-start: 3;
     grid-row-end: 4;
     grid-column-start: 2;
     grid-column-end: 3;
-}
-
-button#add-task {
+  }
+  
+  button#add-task {
     display: flex;
     flex-wrap: wrap;
     align-content: center;
@@ -46,21 +44,39 @@ button#add-task {
     grid-row-end: 4;
     grid-column-start: 3;
     grid-column-end: 4;
-    
-}
-
-#to-do-list {
+  }
+  
+  #to-do-list {
     list-style-type: none;
     padding: 0;
-}
-
-.to-do-item {
+  }
+  
+  .to-do-item {
     display: flex;
     align-items: center;
     padding: 10px;
     border-bottom: 1px lightgray;
-}
-
-.to-do-item input[type="check-box"] {
+  }
+  
+  .to-do-item input[type="checkbox"] {
     margin-right: 10px;
-}
+  }
+  
+  .delete-button,
+  .cancel-button {
+    display: block;
+    margin-top: 5px;
+    margin-right: 10px;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+  
+  #delete-mode {
+    order: -1;
+  }
+  
+  .delete-mode .to-do-item label,
+  .delete-mode .to-do-item .approval-mark {
+    color: red;
+  }
+  
